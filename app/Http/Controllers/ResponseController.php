@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guest;
+use App\Models\GuestList;
+use App\Models\Response;
 use Illuminate\Http\Request;
 
 class ResponseController extends Controller
@@ -13,17 +16,7 @@ class ResponseController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        // return the list of the responses stored
     }
 
     /**
@@ -34,7 +27,22 @@ class ResponseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // example: 
+        $guestId = "asdjg-87a6s7-sdst87-7d6ass";
+        $guestListId = "sdakh987-sd89a768-09ds8a-sa7as";
+        $guest = Guest::where('uuid', $guestId)->firstOrFail();
+        $guestList = GuestList::where('uuid', $guestListId)->firstOrFail();
+        $tickets = $guestList->getTickets();
+
+        $data = [
+            'guest_id' => $guest->id,
+            'guest_list_id' => $guestList->id,
+            'tickets' => $tickets
+        ];
+
+        $response = Response::create($data);
+
+        return true;
     }
 
     /**
@@ -44,17 +52,6 @@ class ResponseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
