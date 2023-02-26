@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Guest;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,7 +26,7 @@ class GuestFactory extends Factory
     public function definition()
     {
         return [
-            'firs_name' => Str::slug($this->faker->firstName),
+            'first_name' => Str::slug($this->faker->firstName),
             'second_name' => Str::slug($this->faker->firstName),
             'first_last_name' => Str::slug($this->faker->lastName),
             'second_last_name' => Str::slug($this->faker->lastName),
