@@ -45,4 +45,14 @@ class Guest extends Model
     {
         return $this->guestList->tickets;
     }
+
+    public function guestExists($request): Object
+    {
+        if ($request->first_name != $this->first_name) return null;
+        if ($request->second_name != $this->second_name) return null;
+        if ($request->first_last_name != $this->first_last_name) return null;
+        if ($request->second_last_name != $this->second_last_name) return null;
+
+        return $this;
+    }
 }

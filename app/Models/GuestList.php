@@ -38,7 +38,12 @@ class GuestList extends Model
         return $this->belongsTo(Response::class);
     }
 
-    public function match(Request $request)
+    public function getTickets()
+    {
+        return $this->tickets;
+    }
+
+    public function match(Request $request): bool
     {
         if ($request->first_name != $this->first_name) return false;
         if ($request->second_name != $this->second_name) return false;
