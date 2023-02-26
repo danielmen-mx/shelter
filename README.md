@@ -64,3 +64,17 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Wedding Response app structure
+
+The system consists of a simple process to store the confirmation of a wedding guest.
+guests = logs when someone replies
+   this guest looks inside the "guest lists" table if there is someone with the same name
+   if it finds someone it creates the guest record ?? if not, don't create the record
+  
+guest in lists = registers all the guests at the wedding and their number of passes
+
+responses = records the guest response
+   when a "guest" is created who matches a "guest list" record
+   a new record of this is created, it relates the "guest" with "guest list" in the table
+   the number of passes per person is important
