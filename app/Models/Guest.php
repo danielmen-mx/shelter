@@ -44,6 +44,10 @@ class Guest extends Model
 
     public function getTickets()
     {
-        return $this->guestList->tickets;
+        $guestList = GuestList::where('guest_id', $this->id)->first();
+
+        if (!$guestList) return;
+
+        return $guestList->tickets;
     }
 }
