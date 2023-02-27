@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Guest as RequestsGuest;
+use App\Http\Resources\Guest as ResourcesGuest;
 use App\Models\Guest;
 use App\Models\GuestList;
-use Illuminate\Http\Request;
+use App\Models\Response;
+use Exception;
 
-class GuestController extends Controller
+class GuestController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -19,85 +22,40 @@ class GuestController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RequestsGuest $request)
     {
         try {
-            // validation
-            // validation must return an array
-            // complete when findmatch guest return empty array and some record behavior
-            $existsInGuests = (new Guest())->findMatch('Guest', $request);
+            $data = $request->validated();
+            $existsGuest = (new Guest())->findMatch('Guest', $data);
 
-            if ($existsInGuests->count() > 1) return dd('update guest && and return message with record updated');
+            if ($existsGuest->count() > 0) {
+                $existsGuest->update(['assistance' => $data['assistance']]);
+                return $this->responseWithData(new ResourcesGuest($existsGuest), 'Invitado actualizado.');
+            }
 
-            $guestList = (new GuestList())->findMatch('GuestList', $request);
+            $guestList = (new GuestList())->findMatch('GuestList', $data);
 
-            // complete behavior for when guest list is find and not
-            if (!$guestList) return response()->json([
-                                'statusCode' => 404,
-                                'message' => 'Upss, al parecer no estas en la lista de invitados, revisa que tu nombre este bien escrito.'
-                            ]);
+            if ($guestList->count() == 0) {
+                throw new Exception('Parace que no estas en la lista de invitados', 404);
+            }
 
-            $data = $this->extracData($request);
             $guest = Guest::create($data);
             $guestList->update(['guest_id' => $guest->id]);
-            $response = Response::create([
+            Response::create([
                 'guest_id' => $guest->id,
-                'guest_list_id' => $guestList,
+                'guest_list_id' => $guestList->id,
                 'tickets' => $guestList->getTickets()
             ]);
 
-        } catch (\Throwable $th) {
-          //throw $th;
+            return $this->responseWithData(new ResourcesGuest($guest), 'Invitado agregado.');
+        } catch (\Exception $e) {
+            return $this->responseWithError($e, 'Algo anda mal.');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Guest  $guest
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Guest $guest)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Guest  $guest
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Guest $guest)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Guest  $guest
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Guest $guest)
-    {
-        //
     }
 
     /**
@@ -109,17 +67,5 @@ class GuestController extends Controller
     public function destroy(Guest $guest)
     {
         //
-    }
-
-    private function extracData(Request $request): array
-    {
-        $keys = (new Guest())->getFillable();
-
-        $data = [];
-        foreach ($keys as $key) {
-            $data[$key] = $request->$key;
-        }
-
-        return $data;
     }
 }
