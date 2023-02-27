@@ -18,9 +18,9 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->uuid()->default(Str::uuid());
             $table->string('first_name');
-            $table->string('second_name');
+            $table->string('second_name')->nullable();
             $table->string('first_last_name');
-            $table->string('second_last_name');
+            $table->string('second_last_name')->nullable();
             $table->boolean('assistance')->default(false);
             $table->timestamps();
             $table->softDeletes();
