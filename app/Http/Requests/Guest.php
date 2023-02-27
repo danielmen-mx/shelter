@@ -24,6 +24,7 @@ class Guest extends FormRequest
             'second_name'      => $this->validateString($this->second_name),
             'first_last_name'  => $this->validateString($this->first_last_name),
             'second_last_name' => $this->validateString($this->second_last_name),
+            'assistance'       => $this->validateBoolean($this->assistance)
         ]);
     }
 
@@ -57,5 +58,10 @@ class Guest extends FormRequest
         }
 
         return $slugged;
+    }
+
+    private function validateBoolean($value)
+    {
+        return $value == 'Asistiremos' ? true : false;
     }
 }
