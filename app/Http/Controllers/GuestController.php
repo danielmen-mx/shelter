@@ -36,34 +36,32 @@ class GuestController extends Controller
      */
     public function store(Request $request)
     {
-        $guestLists = GuestList::get();
+        try {
+            // validation
+            // validation must return an array
+            $existsInGuests = (new Guest())->findMatch('Guest', $request);
 
-        $find = false;
-        foreach ($guestLists as $guestList) {
-            $match = $guestList->match($request);
+            if ($existsInGuests) dd('update guest && and return message with record updated');
 
-            if ($match) {
-                $find = $match;
-            }
-        }
+            $guestList = (new GuestList())->findMatch('GuestList', $request);
 
-        if (!$find) {
-            // improve to exception ?
-            return response()->json([
-                'statusCode' => 404,
-                'message' => 'Upss, al parecer no estas en la lista de invitados, revisa que tu nombre este bien escrito.'
+            if (!$guestList) return response()->json([
+                                'statusCode' => 404,
+                                'message' => 'Upss, al parecer no estas en la lista de invitados, revisa que tu nombre este bien escrito.'
+                            ]);
+
+            $data = $this->extracData($request);
+            $guest = Guest::create($data);
+            $guestList->update(['guest_id' => $guest->id]);
+            $response = Response::create([
+                'guest_id' => $guest->id,
+                'guest_list_id' => $guestList,
+                'tickets' => $guestList->getTickets()
             ]);
+
+        } catch (\Throwable $th) {
+          //throw $th;
         }
-
-        $data = [
-            'first_name' => $request->first_name,
-            'second_name' => $request->second_name,
-            'first_last_name' => $request->first_last_name,
-            'second_last_name' => $request->second_last_name,
-            'assistance' => $request->assistance
-        ];
-
-        
     }
 
     /**
@@ -111,8 +109,15 @@ class GuestController extends Controller
         //
     }
 
-    private function convertArray()
+    private function extracData(Request $request): array
     {
-        
+        $keys = (new Guest())->getFillable();
+
+        $data = [];
+        foreach ($keys as $key) {
+            $data[$key] = $request->$key;
+        }
+
+        return $data;
     }
 }
