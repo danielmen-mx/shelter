@@ -39,12 +39,14 @@ class GuestController extends Controller
         try {
             // validation
             // validation must return an array
+            // complete when findmatch guest return empty array and some record behavior
             $existsInGuests = (new Guest())->findMatch('Guest', $request);
 
-            if ($existsInGuests) dd('update guest && and return message with record updated');
+            if ($existsInGuests->count() > 1) return dd('update guest && and return message with record updated');
 
             $guestList = (new GuestList())->findMatch('GuestList', $request);
 
+            // complete behavior for when guest list is find and not
             if (!$guestList) return response()->json([
                                 'statusCode' => 404,
                                 'message' => 'Upss, al parecer no estas en la lista de invitados, revisa que tu nombre este bien escrito.'
