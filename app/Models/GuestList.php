@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Traits\MatchTrait;
 
 class GuestList extends Model
 {
-    use HasFactory;
+    use HasFactory, MatchTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -41,15 +42,5 @@ class GuestList extends Model
     public function getTickets()
     {
         return $this->tickets;
-    }
-
-    public function match(Request $request): bool
-    {
-        if ($request->first_name != $this->first_name) return false;
-        if ($request->second_name != $this->second_name) return false;
-        if ($request->first_last_name != $this->first_last_name) return false;
-        if ($request->second_last_name != $this->second_last_name) return false;
-
-        return true;
     }
 }
