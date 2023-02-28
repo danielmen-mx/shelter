@@ -59,6 +59,22 @@ class GuestController extends ApiController
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Guest  $guest
+     * @return \Illuminate\Http\Response
+     */
+    public function show($guestId)
+    {
+        try {
+            $guest = Guest::where('uuid', $guestId)->firstOrFail();
+            return $this->responseWithData(new ResourcesGuest($guest), 'Invitado encontrado');
+        } catch (\Exception $e) {
+            return $this->responseWithError($e, 'Algo anda mal.');
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Guest  $guest
