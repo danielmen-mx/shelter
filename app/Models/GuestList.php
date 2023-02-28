@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasUuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use App\Traits\MatchTrait;
 
 class GuestList extends Model
 {
-    use HasFactory, MatchTrait;
+    use HasFactory, MatchTrait, HasUuidTrait;
 
     /**
      * The attributes that are mass assignable.
