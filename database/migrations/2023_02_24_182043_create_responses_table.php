@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid()->default(Str::uuid());
+            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('guest_id');
             $table->foreign('guest_id')->references('id')->on('guests');
             $table->unsignedBigInteger('guest_list_id');

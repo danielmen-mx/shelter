@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('guests', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid()->default(Str::uuid());
+            $table->uuid('uuid')->unique();
             $table->string('first_name');
             $table->string('second_name')->nullable();
             $table->string('first_last_name');
