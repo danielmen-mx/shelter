@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ResponseCollection;
 use App\Models\Guest;
 use App\Models\GuestList;
 use App\Models\Response;
 use Illuminate\Http\Request;
 
-class ResponseController extends Controller
+class ResponseController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +17,13 @@ class ResponseController extends Controller
      */
     public function index()
     {
-        // return the list of the responses stored
+        try {
+            $responses = Response::get();
+
+            return $this->responseWithData(new ResponseCollection($responses), 'Lista de invitados confirmados.');
+        } catch (\Exception $e) {
+            return $this->responseWithError($e, 'Algo anda mal.');
+        }
     }
 
     /**

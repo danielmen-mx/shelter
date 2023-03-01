@@ -52,4 +52,9 @@ class Guest extends Model
 
         return $guestList->tickets;
     }
+
+    public function getFullName()
+    {
+        return $this->first_name.' '.$this->second_name.' '.$this->first_last_name.' '.$this->second_last_name;
+    }
 }
