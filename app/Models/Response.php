@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasUuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasUuidTrait;
 
 class Response extends Model
 {
-    use HasFactory, HasUuidTrait;
+    use HasFactory, HasUuidTrait, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
