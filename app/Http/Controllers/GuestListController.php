@@ -7,6 +7,7 @@ use App\Http\Requests\GuestList as GuestListRequest;
 use App\Http\Resources\GuestListCollection;
 use Illuminate\Http\Request;
 use App\Models\GuestList;
+use App\Models\Response;
 use Exception;
 
 class GuestListController extends ApiController
@@ -98,7 +99,18 @@ class GuestListController extends ApiController
     {
         try {
             $guestList = GuestList::where('uuid', $guestListId)->firstOrFail();
+            $guest = $guestList->guest;
+            $response = Response::where('guest_list_id', $guestList->id)->first();
+
+            if ($response) {
+              $response->delete();
+            }
+
             $guestList->delete();
+
+            if ($guest) {
+              $guest->delete();
+            }
 
             return $this->responseWithMessage('Invitado eliminado.');
         } catch (\Exception $e) {
