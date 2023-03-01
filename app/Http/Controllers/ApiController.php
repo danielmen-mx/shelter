@@ -25,4 +25,9 @@ class ApiController extends Controller
 
         return response()->json($response, $code);
     }
+
+    public function responseWithMessage($message, $statusCode = 200)
+    {
+        return $this->responseWithData(null, $message, $statusCode);
+    }
 }
